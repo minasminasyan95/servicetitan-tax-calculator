@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ServiceTitan Tax Calculator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f5f5f4;
+    --color-background-warning: #fefce8;
+    --color-border-tertiary: rgba(0,0,0,0.12);
+    --color-border-secondary: rgba(0,0,0,0.22);
+    --color-border-primary: rgba(0,0,0,0.35);
+    --color-border-warning: #fde047;
+    --color-text-primary: #1a1a18;
+    --color-text-secondary: #5a5a56;
+    --color-text-tertiary: #9a9a94;
+    --color-text-danger: #a32d2d;
+    --color-text-warning: #854f0b;
+    --color-text-success: #2a7a3b;
+    --color-toggle-active-bg: #1a1a18;
+    --color-toggle-active-text: #ffffff;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'Menlo', 'Consolas', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-background-primary: #1e1e1c;
+      --color-background-secondary: #2a2a28;
+      --color-background-warning: #2a2200;
+      --color-border-tertiary: rgba(255,255,255,0.1);
+      --color-border-secondary: rgba(255,255,255,0.2);
+      --color-border-primary: rgba(255,255,255,0.35);
+      --color-border-warning: #854f0b;
+      --color-text-primary: #f0efe8;
+      --color-text-secondary: #a8a89e;
+      --color-text-tertiary: #6a6a64;
+      --color-text-danger: #f09595;
+      --color-text-warning: #fac775;
+      --color-text-success: #5ec97a;
+      --color-toggle-active-bg: #f0efe8;
+      --color-toggle-active-text: #1a1a18;
+    }
+  }
+
+  body { font-family: var(--font-sans); background: var(--color-background-secondary); color: var(--color-text-primary); min-height: 100vh; padding: 2rem 1rem; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* Header */
+  .header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; gap: 12px; flex-wrap: wrap; }
+  .header-row h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
+  .header-meta { font-size: 11px; color: var(--color-text-tertiary); text-align: right; line-height: 1.6; flex-shrink: 0; }
+  .header-meta strong { color: var(--color-text-secondary); font-weight: 500; }
+
+  /* Layout primitives */
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 8px; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1rem 0; }
+
+  /* Input rows */
+  .row { display: grid; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .row-item { grid-template-columns: 1fr auto auto 28px; }
+  .row-discount { grid-template-columns: 1fr 28px; }
+  .row-tax { grid-template-columns: 1fr 28px; }
+  input[type=number] { width: 100%; font-size: 14px; padding: 6px 8px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); outline: none; }
+  input[type=number]:focus { box-shadow: 0 0 0 2px rgba(0,0,0,0.12); }
+
+  /* Toggle buttons */
+  .toggle-group { display: inline-flex; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); overflow: hidden; background: var(--color-background-primary); }
+  .toggle-group button { background: none; border: none; border-right: 0.5px solid var(--color-border-secondary); color: var(--color-text-tertiary); font-size: 12px; font-family: var(--font-sans); cursor: pointer; padding: 5px 10px; line-height: 1.3; white-space: nowrap; transition: background 0.1s, color 0.1s; }
+  .toggle-group button:last-child { border-right: none; }
+  .toggle-group button:hover:not(.active) { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+  .toggle-group button.active { background: var(--color-toggle-active-bg); color: var(--color-toggle-active-text); font-weight: 500; }
+
+  /* Misc controls */
+  .add-btn { background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); color: var(--color-text-secondary); font-size: 13px; cursor: pointer; padding: 5px 10px; white-space: nowrap; margin-top: 4px; }
+  .add-btn:hover { background: var(--color-background-secondary); }
+  .rm-btn { background: none; border: none; color: var(--color-text-tertiary); font-size: 16px; cursor: pointer; padding: 2px 4px; line-height: 1; }
+  .rm-btn:hover { color: var(--color-text-danger); }
+  .col-head { font-size: 11px; color: var(--color-text-tertiary); }
+
+  /* Results */
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
+  .metric-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .metric-value { font-size: 18px; font-weight: 500; color: var(--color-text-primary); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .metric-formula { font-size: 11px; color: var(--color-text-tertiary); margin-top: 3px; font-family: var(--font-mono); }
+  .calc-line { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; gap: 8px; }
+  .calc-line:last-child { border-bottom: none; }
+  .calc-label { color: var(--color-text-secondary); }
+  .calc-val { font-weight: 500; color: var(--color-text-primary); display: inline-flex; align-items: center; gap: 4px; }
+  .calc-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .total-line { display: flex; justify-content: space-between; padding: 10px 0 0; font-size: 15px; font-weight: 500; border-top: 1px solid var(--color-border-secondary); margin-top: 4px; align-items: center; }
+  .step-tag { display: inline-block; font-size: 10px; font-weight: 500; background: var(--color-background-secondary); color: var(--color-text-tertiary); border-radius: 4px; padding: 2px 6px; margin-right: 6px; flex-shrink: 0; }
+  .tax-row-detail { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; align-items: center; }
+  .zero-state { font-size: 13px; color: var(--color-text-tertiary); padding: 12px 0; }
+  .neg { color: var(--color-text-danger); }
+
+  /* Precision tooltip */
+  .precision-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); font-size: 9px; color: var(--color-text-tertiary); cursor: default; position: relative; flex-shrink: 0; }
+  .precision-icon:hover .tooltip { display: block; }
+  .tooltip { display: none; position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%); background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 4px 8px; font-size: 12px; color: var(--color-text-primary); white-space: nowrap; z-index: 99; font-weight: 400; pointer-events: none; }
+  .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--color-border-secondary); }
+
+  /* Warning */
+  .warn-box { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 12px; color: var(--color-text-warning); margin-bottom: 1rem; }
+
+  /* Comparison section (inside calc card) */
+  .compare-section { margin-top: 1rem; border-top: 1px solid var(--color-border-secondary); padding-top: 1rem; }
+  .compare-title { font-size: 12px; font-weight: 600; color: var(--color-text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compare-col { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
+  .compare-col-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .compare-col-label.actual { color: var(--color-text-danger); }
+  .compare-col-label.ideal { color: var(--color-text-success); }
+  .compare-line { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; gap: 8px; }
+  .compare-line .cl { color: var(--color-text-secondary); }
+  .compare-line .cv { font-weight: 500; color: var(--color-text-primary); font-family: var(--font-mono); font-size: 12px; }
+  .compare-diff { margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-secondary); display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; }
+  .diff-badge { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+  .diff-badge.over { background: rgba(163,45,45,0.12); color: var(--color-text-danger); }
+  .diff-badge.under { background: rgba(42,122,59,0.12); color: var(--color-text-success); }
+
+  /* ── Info section — styled to match the calculator ── */
+  .info-section { margin-top: 0; }
+  /* The section-label + card above already handle the container */
+  .info-card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; }
+  .info-card-body p { margin-bottom: 0.65rem; }
+  .info-card-body p:last-child { margin-bottom: 0; }
+
+  /* Formula table — looks like the results-grid metrics */
+  .formula-table { display: grid; grid-template-columns: auto 1fr; gap: 0; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; margin: 0.75rem 0; }
+  .formula-table-row { display: contents; }
+  .formula-table-row .ft-lhs { background: var(--color-background-secondary); font-size: 11px; color: var(--color-text-tertiary); padding: 7px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); white-space: nowrap; display: flex; align-items: center; }
+  .formula-table-row .ft-rhs { background: var(--color-background-primary); font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); padding: 7px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; }
+  .formula-table-row:last-child .ft-lhs,
+  .formula-table-row:last-child .ft-rhs { border-bottom: none; }
+  .formula-table-note { font-size: 11px; color: var(--color-text-tertiary); margin-top: -0.25rem; margin-bottom: 0.75rem; padding: 0 2px; line-height: 1.5; }
+
+  /* Scenario list — styled like calc-lines */
+  .scenario-list { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; margin: 0.75rem 0; }
+  .scenario-item { padding: 0.65rem 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; color: var(--color-text-secondary); line-height: 1.55; }
+  .scenario-item:last-child { border-bottom: none; }
+  .scenario-item strong { color: var(--color-text-primary); font-weight: 500; display: block; margin-bottom: 2px; }
+
+  /* Recommendation — styled like a metric card */
+  .rec-metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-top: 0.75rem; }
+  .rec-metric .metric-label { margin-bottom: 6px; }
+  .rec-metric p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+
+  @media (max-width: 480px) {
+    .header-meta { text-align: left; }
+    .results-grid { grid-template-columns: 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header-row">
+    <h1>ServiceTitan Tax Calculator</h1>
+    <div class="header-meta">
+      <div><strong>Created by:</strong> Minas Minasyan <span style="color:var(--color-text-tertiary);">(Associate Specialist, Financials)</span></div>
+      <div><strong>Last Updated:</strong> Mar 13, 2026</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;border-left:3px solid var(--color-border-primary);">
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <div style="font-size:16px;margin-top:1px;flex-shrink:0;">📋</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">Getting started</div>
+        <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.65;">
+          Before entering items, query the invoice in your database to retrieve each line's amount, taxable status, and discountable status.
+          Price modifiers (discount and fee items) are included and will appear at the bottom of the results — enter them in the
+          <strong style="color:var(--color-text-primary);font-weight:500;">Discount items</strong> section below, not as invoice items.
+        </div>
+        <div style="margin-top:10px;">
+          <button onclick="(function(btn){const block=document.getElementById('sql-block');const arrow=document.getElementById('sql-arrow');const open=block.style.display==='none'||block.style.display==='';block.style.display=open?'block':'none';arrow.style.transform=open?'rotate(90deg)':'rotate(0deg)'})(this)"
+            style="background:none;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);font-size:12px;font-family:var(--font-sans);cursor:pointer;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;">
+            <span id="sql-arrow" style="display:inline-block;transition:transform 0.2s;font-size:10px;">▶</span>
+            View SQL query
+          </button>
+        </div>
+        <div id="sql-block" style="display:none;margin-top:8px;">
+          <div style="position:relative;">
+            <pre style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:0.85rem 1rem;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);overflow-x:auto;line-height:1.7;margin:0;">select 
+    ii.[Id],
+    ii.[SkuName]               as [Item Code],
+    ii.[Description],
+    ii.[Total],
+    ii.[Taxable],
+    ii.[AllowDiscounts]        as [Discountable],
+    ii.[SkuReference.SkuType]
+from [dbo].[InvoiceItem] ii
+where ii.[Invoice.Id] = @InvoiceID
+  and ii.[Active] = 1
+order by ii.[SkuReference.SkuType]</pre>
+            <button onclick="(function(){const text=`select \n    ii.[Id],\n    ii.[SkuName]               as [Item Code],\n    ii.[Description],\n    ii.[Total],\n    ii.[Taxable],\n    ii.[AllowDiscounts]        as [Discountable],\n    ii.[SkuReference.SkuType]\nfrom [dbo].[InvoiceItem] ii\nwhere ii.[Invoice.Id] = @InvoiceID\n  and ii.[Active] = 1\norder by ii.[SkuReference.SkuType]`;navigator.clipboard.writeText(text).then(()=>{const btn=document.getElementById('copy-btn');btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500)})})()"
+              id="copy-btn"
+              style="position:absolute;top:8px;right:8px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:6px;color:var(--color-text-tertiary);font-size:11px;font-family:var(--font-sans);cursor:pointer;padding:3px 8px;">Copy</button>
+          </div>
+          <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px;padding:0 2px;">Replace <code style="font-family:var(--font-mono);background:var(--color-background-secondary);padding:1px 4px;border-radius:3px;">@InvoiceID</code> with the target invoice ID before running.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Invoice items</div>
+  <div class="card">
+    <div class="row row-item" style="margin-bottom:4px;">
+      <div class="col-head">Amount ($)</div>
+      <div class="col-head">Taxable?</div>
+      <div class="col-head">Discountable?</div>
+      <div></div>
+    </div>
+    <div id="items-container"></div>
+    <button class="add-btn" onclick="addItem()">+ Add item</button>
+  </div>
+
+  <div class="section-label">Discount items</div>
+  <div class="card">
+    <div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:10px;">Discount items are always non-taxable. Enter the discount value as a positive number.</div>
+    <div class="row row-discount" style="margin-bottom:4px;">
+      <div class="col-head">Discount amount ($)</div>
+      <div></div>
+    </div>
+    <div id="discounts-container"></div>
+    <button class="add-btn" onclick="addDiscount()">+ Add discount item</button>
+  </div>
+
+  <div class="section-label">Tax rates</div>
+  <div class="card">
+    <div class="row row-tax" style="margin-bottom:4px;">
+      <div class="col-head">Rate (%)</div>
+      <div></div>
+    </div>
+    <div id="taxes-container"></div>
+    <button class="add-btn" onclick="addTax()">+ Add tax rate</button>
+  </div>
+
+  <div class="section-label">Calculation</div>
+  <div class="card">
+    <div class="zero-state" id="zero-state">Enter items above to see the breakdown.</div>
+    <div id="results-content" style="display:none;">
+      <div id="warn-neg" class="warn-box" style="display:none;">The discountable pool is negative — the proration factor is negative, which increases taxable line amounts instead of reducing them.</div>
+      <div class="results-grid">
+        <div class="metric"><div class="metric-label">Taxable total (before proration)</div><div class="metric-value" id="r-taxable-before"></div><div class="metric-formula" id="r-taxable-before-formula"></div></div>
+        <div class="metric"><div class="metric-label">Discountable pool</div><div class="metric-value" id="r-pool"></div><div class="metric-formula" id="r-pool-formula"></div></div>
+        <div class="metric"><div class="metric-label">Total discount</div><div class="metric-value" id="r-discount"></div><div class="metric-formula" id="r-discount-formula"></div></div>
+        <div class="metric"><div class="metric-label">Proration factor</div><div class="metric-value" id="r-factor"></div><div class="metric-formula" id="r-factor-formula"></div></div>
+      </div>
+      <div class="divider"></div>
+      <div id="steps-detail"></div>
+      <div class="divider"></div>
+      <div class="metric" style="margin-bottom:1rem;"><div class="metric-label">New taxable total (after proration)</div><div class="metric-value" style="font-size:22px;" id="r-taxable-after"></div></div>
+      <div id="tax-breakdown"></div>
+      <div class="total-line">
+        <span>Total tax</span>
+        <span class="calc-val" id="r-totaltax"></span>
+      </div>
+      <div class="total-line" style="font-size:17px; padding-top:12px; margin-top:4px; border-top: 1.5px solid var(--color-border-primary);">
+        <span>Invoice total</span>
+        <span class="calc-val" id="r-invoicetotal"></span>
+      </div>
+      <div id="compare-section" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="section-label">How ServiceTitan Discount Items affect tax</div>
+  <div class="card info-section">
+    <div class="info-card-body">
+      <p>Discount items in ServiceTitan are applied <strong>proportionally (prorated)</strong> across all discountable lines on the invoice — they do not simply subtract a flat amount.</p>
+
+      <div class="formula-table">
+        <div class="formula-table-row">
+          <div class="ft-lhs">Discountable pool</div>
+          <div class="ft-rhs">= sum of all discountable line amounts</div>
+        </div>
+        <div class="formula-table-row">
+          <div class="ft-lhs">Proration factor</div>
+          <div class="ft-rhs">= Total discount ÷ Discountable pool</div>
+        </div>
+        <div class="formula-table-row">
+          <div class="ft-lhs">Allocated discount</div>
+          <div class="ft-rhs">= Line amount × Proration factor</div>
+        </div>
+        <div class="formula-table-row">
+          <div class="ft-lhs">Adjusted line amount</div>
+          <div class="ft-rhs">= Line amount − Allocated discount</div>
+        </div>
+      </div>
+      <div class="formula-table-note">Only discountable lines receive an allocation. Non-discountable lines are unchanged. The adjusted amounts of taxable lines are summed to produce the new taxable total.</div>
+
+      <p>This can produce unexpected results in several scenarios:</p>
+
+      <div class="scenario-list">
+        <div class="scenario-item">
+          <strong>Negative discountable pool</strong>
+          If discountable lines include negative amounts (e.g., credits or negative service items) that bring the pool total below zero, the proration factor turns negative. A negative factor causes allocated discounts to be subtracted as negative numbers — which <em>increases</em> taxable line amounts rather than reducing them, resulting in a higher taxable total and more tax than expected.
+        </div>
+        <div class="scenario-item">
+          <strong>Mixed taxable / non-taxable discountable lines</strong>
+          Because the discount is spread proportionally across all discountable lines regardless of their taxability, the effective reduction on taxable lines may be larger or smaller than the face value of the discount — making tax outcomes difficult to predict.
+        </div>
+        <div class="scenario-item">
+          <strong>Non-discountable taxable lines</strong>
+          Any taxable line marked non-discountable is completely unaffected by the proration and retains its full original amount for tax purposes.
+        </div>
+      </div>
+
+      <div class="rec-metric">
+        <div class="metric-label">Our recommendation</div>
+        <p>We strongly recommend <strong>not using Discount Items</strong> on invoices where tax is being charged. Instead, apply discounts using <strong>negative-amount service items</strong>. Unlike discount items, negative service items can be marked as taxable, giving you direct and predictable control over how the discount affects the taxable total.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let items = [], discounts = [], taxes = [];
+let nextItemId = 0, nextDiscountId = 0, nextTaxId = 0;
+
+function fullStr(n) { return n.toPrecision(15).replace(/\.?0+$/, ''); }
+function hasExtra(n) { return Math.abs(n - parseFloat(n.toFixed(2))) > 1e-10; }
+function fmtNum(n) { return n < 0 ? `(${Math.abs(n).toFixed(2)})` : n.toFixed(2); }
+
+function pHtml(n, withDollar = true) {
+  const prefix = withDollar ? '$' : '';
+  const sign = n < 0 ? '−' : '';
+  const abs = Math.abs(n);
+  const display = abs.toFixed(2);
+  const neg = n < 0;
+  const spanClass = neg ? ' class="neg"' : '';
+  if (!hasExtra(n)) return `<span${spanClass}>${sign}${prefix}${display}</span>`;
+  return `<span${spanClass}>${sign}${prefix}${display}</span><span class="precision-icon">~<span class="tooltip">${sign}${prefix}${fullStr(abs)}</span></span>`;
+}
+
+function pFactor(n) {
+  if (n === null) return '<span>—</span>';
+  const sign = n < 0 ? '−' : '';
+  const abs = Math.abs(n);
+  const display = abs.toFixed(10);
+  if (!hasExtra(n)) return `<span>${sign}${display}</span>`;
+  return `<span>${sign}${display}</span><span class="precision-icon">~<span class="tooltip">${sign}${fullStr(abs)}</span></span>`;
+}
+
+function addItem() { items.push({ id: nextItemId++, amount: '', taxable: 'yes', discountable: 'yes' }); renderItems(); }
+function removeItem(id) { items = items.filter(i => i.id !== id); renderItems(); calculate(); }
+function addDiscount() { discounts.push({ id: nextDiscountId++, amount: '' }); renderDiscounts(); }
+function removeDiscount(id) { discounts = discounts.filter(d => d.id !== id); renderDiscounts(); calculate(); }
+function addTax() { taxes.push({ id: nextTaxId++, rate: '' }); renderTaxes(); }
+function removeTax(id) { taxes = taxes.filter(t => t.id !== id); renderTaxes(); calculate(); }
+function setItemTaxable(id, val) { items.find(i => i.id === id).taxable = val; renderItems(); calculate(); }
+function setItemDiscountable(id, val) { items.find(i => i.id === id).discountable = val; renderItems(); calculate(); }
+
+function renderItems() {
+  document.getElementById('items-container').innerHTML = items.map(item => `
+    <div class="row row-item">
+      <input type="number" step="0.01" placeholder="0.00" value="${item.amount}"
+        oninput="items.find(i=>i.id==${item.id}).amount=this.value;calculate()" style="text-align:right;" />
+      <div class="toggle-group">
+        <button class="${item.taxable === 'yes' ? 'active' : ''}" onclick="setItemTaxable(${item.id}, 'yes')">Taxable</button>
+        <button class="${item.taxable === 'no' ? 'active' : ''}" onclick="setItemTaxable(${item.id}, 'no')">Non</button>
+      </div>
+      <div class="toggle-group">
+        <button class="${item.discountable === 'yes' ? 'active' : ''}" onclick="setItemDiscountable(${item.id}, 'yes')">Discountable</button>
+        <button class="${item.discountable === 'no' ? 'active' : ''}" onclick="setItemDiscountable(${item.id}, 'no')">Non</button>
+      </div>
+      <button class="rm-btn" onclick="removeItem(${item.id})">×</button>
+    </div>`).join('');
+}
+
+function renderDiscounts() {
+  document.getElementById('discounts-container').innerHTML = discounts.map(d => `
+    <div class="row row-discount">
+      <input type="number" min="0" step="0.01" placeholder="0.00" value="${d.amount}"
+        oninput="discounts.find(x=>x.id==${d.id}).amount=this.value;calculate()" style="text-align:right;" />
+      <button class="rm-btn" onclick="removeDiscount(${d.id})">×</button>
+    </div>`).join('');
+}
+
+function renderTaxes() {
+  document.getElementById('taxes-container').innerHTML = taxes.map(t => `
+    <div class="row row-tax">
+      <input type="number" min="0" step="0.001" placeholder="0.000" value="${t.rate}"
+        oninput="taxes.find(x=>x.id==${t.id}).rate=this.value;calculate()" style="text-align:right;" />
+      <button class="rm-btn" onclick="removeTax(${t.id})">×</button>
+    </div>`).join('');
+}
+
+function calculate() {
+  const hasData = items.length > 0;
+  document.getElementById('zero-state').style.display = hasData ? 'none' : 'block';
+  document.getElementById('results-content').style.display = hasData ? 'block' : 'none';
+  if (!hasData) return;
+
+  const parsed = items.map(i => ({ ...i, amt: parseFloat(i.amount) || 0 }));
+  const totalDiscount = discounts.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+  const discountablePool = parsed.filter(i => i.discountable === 'yes').reduce((s, i) => s + i.amt, 0);
+  const factor = (discountablePool !== 0 && totalDiscount !== 0) ? totalDiscount / discountablePool : null;
+  const taxableBeforeProration = parsed.filter(i => i.taxable === 'yes').reduce((s, i) => s + i.amt, 0);
+
+  const adjusted = parsed.map(item => {
+    const allocation = (item.discountable === 'yes' && factor !== null) ? item.amt * factor : 0;
+    const newAmt = item.amt - allocation;
+    return { ...item, allocation, newAmt };
+  });
+
+  const newTaxableTotal = adjusted.filter(i => i.taxable === 'yes').reduce((s, i) => s + i.newAmt, 0);
+  const isNegPool = discountablePool < 0 && totalDiscount > 0;
+  document.getElementById('warn-neg').style.display = isNegPool ? 'block' : 'none';
+
+  // Metric values + inline formulas
+  document.getElementById('r-taxable-before').innerHTML = pHtml(taxableBeforeProration);
+  const taxableItems = parsed.filter(i => i.taxable === 'yes');
+  document.getElementById('r-taxable-before-formula').textContent =
+    taxableItems.length > 1 ? taxableItems.map(i => fmtNum(i.amt)).join(' + ') + ' = ' + fmtNum(taxableBeforeProration) : '';
+
+  document.getElementById('r-pool').innerHTML = pHtml(discountablePool);
+  const discItems = parsed.filter(i => i.discountable === 'yes');
+  document.getElementById('r-pool-formula').textContent =
+    discItems.length > 1 ? discItems.map(i => fmtNum(i.amt)).join(' + ') + ' = ' + fmtNum(discountablePool) : '';
+
+  document.getElementById('r-discount').innerHTML = pHtml(totalDiscount);
+  const discAmts = discounts.map(d => parseFloat(d.amount) || 0);
+  document.getElementById('r-discount-formula').textContent =
+    discAmts.length > 1 ? discAmts.map(fmtNum).join(' + ') + ' = ' + fmtNum(totalDiscount) : '';
+
+  document.getElementById('r-factor').innerHTML = pFactor(factor);
+  document.getElementById('r-factor-formula').textContent =
+    factor !== null ? `${fmtNum(totalDiscount)} ÷ ${fmtNum(discountablePool)} = ${factor.toFixed(10)}` : '';
+
+  // Line item breakdown
+  let stepsHtml = `<div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:8px; font-weight:500;">Line item breakdown</div>`;
+  adjusted.forEach((item, idx) => {
+    const tLabel = item.taxable === 'yes' ? 'taxable' : 'non-taxable';
+    const dLabel = item.discountable === 'yes' ? 'discountable' : 'non-discountable';
+    const hasAlloc = item.discountable === 'yes' && factor !== null;
+    stepsHtml += `<div class="calc-line">
+      <div style="flex:1;">
+        <span class="step-tag">${idx+1}</span>
+        <span class="calc-label">Line ${idx+1}</span>
+        <span style="font-size:11px;color:var(--color-text-tertiary);margin-left:6px;">${tLabel} · ${dLabel}</span>
+        ${hasAlloc ? `<div class="calc-sub" style="padding-left:28px;">
+          Allocation: ${pHtml(item.amt)} × ${factor.toFixed(6)} = ${pHtml(item.allocation)}
+          &nbsp;→&nbsp; ${pHtml(item.amt)} − ${pHtml(item.allocation)} = ${pHtml(item.newAmt)}
+        </div>` : ''}
+      </div>
+      <div style="text-align:right; white-space:nowrap;">
+        <div class="calc-val">${pHtml(item.newAmt)}</div>
+        ${hasAlloc ? `<div class="calc-sub">was ${pHtml(item.amt)}</div>` : ''}
+      </div>
+    </div>`;
+  });
+  document.getElementById('steps-detail').innerHTML = stepsHtml;
+
+  // Tax breakdown
+  let taxHtml = `<div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:8px; font-weight:500;">Tax on ${pHtml(newTaxableTotal)} taxable total</div>`;
+  let totalTax = 0;
+  taxes.forEach((t, idx) => {
+    const rate = parseFloat(t.rate) || 0;
+    const taxAmt = newTaxableTotal * rate / 100;
+    totalTax += taxAmt;
+    taxHtml += `<div class="tax-row-detail">
+      <span class="calc-label">Rate ${idx+1} <span style="color:var(--color-text-tertiary)">(${rate}%)</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-tertiary);margin-left:6px;">${fmtNum(newTaxableTotal)} × ${rate}% = ${fmtNum(taxAmt)}</span>
+      </span>
+      <span class="calc-val">${pHtml(taxAmt)}</span>
+    </div>`;
+  });
+  if (taxes.length === 0) taxHtml += `<div class="calc-label" style="font-size:13px;padding:4px 0;">No tax rates added.</div>`;
+  document.getElementById('r-taxable-after').innerHTML = pHtml(newTaxableTotal);
+  document.getElementById('tax-breakdown').innerHTML = taxHtml;
+  document.getElementById('r-totaltax').innerHTML = pHtml(totalTax);
+
+  const itemsTotal = parsed.reduce((s, i) => s + i.amt, 0);
+  const invoiceTotal = itemsTotal - totalDiscount + totalTax;
+  document.getElementById('r-invoicetotal').innerHTML = pHtml(invoiceTotal);
+
+  // Comparison: actual vs if discount were taxable
+  const compareEl = document.getElementById('compare-section');
+  if (totalDiscount > 0 && taxes.length > 0) {
+    const idealTaxableTotal = taxableBeforeProration - totalDiscount;
+    let idealTotalTax = 0;
+    let idealTaxRows = '';
+    taxes.forEach((t, idx) => {
+      const rate = parseFloat(t.rate) || 0;
+      const taxAmt = idealTaxableTotal * rate / 100;
+      idealTotalTax += taxAmt;
+      idealTaxRows += `<div class="compare-line">
+        <span class="cl">Rate ${idx+1} (${rate}%)</span>
+        <span class="cv">${fmtNum(idealTaxableTotal)} × ${rate}% = ${fmtNum(taxAmt)}</span>
+      </div>`;
+    });
+    const idealInvoiceTotal = itemsTotal - totalDiscount + idealTotalTax;
+    const taxDiff = totalTax - idealTotalTax;
+
+    compareEl.style.display = 'block';
+    compareEl.innerHTML = `
+      <div class="compare-section">
+        <div class="compare-title">Comparison: Actual vs. If discount were taxable</div>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-col-label actual">Actual (discount non-taxable + prorated)</div>
+            <div class="compare-line"><span class="cl">Taxable total (after proration)</span><span class="cv">${fmtNum(newTaxableTotal)}</span></div>
+            ${taxes.map((t, idx) => {
+              const rate = parseFloat(t.rate) || 0;
+              const taxAmt = newTaxableTotal * rate / 100;
+              return `<div class="compare-line"><span class="cl">Rate ${idx+1} (${rate}%)</span><span class="cv">${fmtNum(newTaxableTotal)} × ${rate}% = ${fmtNum(taxAmt)}</span></div>`;
+            }).join('')}
+            <div class="compare-line" style="font-weight:600;padding-top:4px;border-top:0.5px solid var(--color-border-tertiary);margin-top:4px;"><span class="cl">Total tax</span><span class="cv">${fmtNum(totalTax)}</span></div>
+            <div class="compare-line"><span class="cl">Invoice total</span><span class="cv">${fmtNum(invoiceTotal)}</span></div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-col-label ideal">If discount were taxable (flat deduction)</div>
+            <div class="compare-line"><span class="cl">${fmtNum(taxableBeforeProration)} − ${fmtNum(totalDiscount)}</span><span class="cv">${fmtNum(idealTaxableTotal)}</span></div>
+            ${idealTaxRows}
+            <div class="compare-line" style="font-weight:600;padding-top:4px;border-top:0.5px solid var(--color-border-tertiary);margin-top:4px;"><span class="cl">Total tax</span><span class="cv">${fmtNum(idealTotalTax)}</span></div>
+            <div class="compare-line"><span class="cl">Invoice total</span><span class="cv">${fmtNum(idealInvoiceTotal)}</span></div>
+          </div>
+        </div>
+        <div class="compare-diff">
+          <span style="font-size:13px;color:var(--color-text-secondary);">Tax difference</span>
+          <span class="diff-badge ${taxDiff >= 0 ? 'over' : 'under'}">${taxDiff >= 0 ? '+' : '−'}$${Math.abs(taxDiff).toFixed(2)} ${taxDiff >= 0 ? 'overcharged' : 'saved'}</span>
+        </div>
+      </div>`;
+  } else {
+    compareEl.style.display = 'none';
+  }
+}
+
+addItem(); addDiscount(); addTax(); calculate();
+</script>
+</body>
+</html>
