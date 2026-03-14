@@ -7,155 +7,280 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
+    /* Pale green — primary: section labels, input focus, card accents */
+    --accent:        #3a9c6e;
+    --accent-light:  #edf8f3;
+    --accent-muted:  rgba(58,156,110,0.11);
+
+    /* Teal — secondary: step tags, key result metric */
+    --accent2:       #0d7377;
+    --accent2-light: #f0fafa;
+    --accent2-muted: rgba(13,115,119,0.13);
+
+    /* Amber — tertiary: invoice total, recommendation box */
+    --accent3:       #a05c00;
+    --accent3-light: #fffbeb;
+    --accent3-muted: rgba(160,92,0,0.12);
+
     --color-background-primary: #ffffff;
-    --color-background-secondary: #f5f5f4;
-    --color-background-warning: #fefce8;
-    --color-border-tertiary: rgba(0,0,0,0.12);
-    --color-border-secondary: rgba(0,0,0,0.22);
-    --color-border-primary: rgba(0,0,0,0.35);
-    --color-border-warning: #fde047;
-    --color-text-primary: #1a1a18;
-    --color-text-secondary: #5a5a56;
-    --color-text-tertiary: #9a9a94;
-    --color-text-danger: #a32d2d;
-    --color-text-warning: #854f0b;
-    --color-text-success: #2a7a3b;
-    --color-toggle-active-bg: #1a1a18;
+    --color-background-secondary: #f3f6f4;
+    --color-background-warning: #fffbeb;
+    --color-border-tertiary: rgba(0,0,0,0.08);
+    --color-border-secondary: rgba(0,0,0,0.15);
+    --color-border-primary: rgba(0,0,0,0.28);
+    --color-border-warning: #f59e0b;
+    --color-text-primary: #141c16;
+    --color-text-secondary: #445048;
+    --color-text-tertiary: #8a9890;
+    --color-text-danger: #b91c1c;
+    --color-text-warning: #92400e;
+    --color-text-success: #166534;
+    --color-toggle-active-bg: #1e3428;
     --color-toggle-active-text: #ffffff;
     --border-radius-md: 8px;
-    --border-radius-lg: 12px;
-    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --border-radius-lg: 14px;
+    --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-mono: 'Menlo', 'Consolas', monospace;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-background-primary: #1e1e1c;
-      --color-background-secondary: #2a2a28;
-      --color-background-warning: #2a2200;
-      --color-border-tertiary: rgba(255,255,255,0.1);
-      --color-border-secondary: rgba(255,255,255,0.2);
-      --color-border-primary: rgba(255,255,255,0.35);
-      --color-border-warning: #854f0b;
-      --color-text-primary: #f0efe8;
-      --color-text-secondary: #a8a89e;
-      --color-text-tertiary: #6a6a64;
-      --color-text-danger: #f09595;
-      --color-text-warning: #fac775;
-      --color-text-success: #5ec97a;
-      --color-toggle-active-bg: #f0efe8;
-      --color-toggle-active-text: #1a1a18;
+      --accent:        #5ec98a;
+      --accent-light:  #0c1f14;
+      --accent-muted:  rgba(94,201,138,0.13);
+
+      --accent2:       #2dd4bf;
+      --accent2-light: #061414;
+      --accent2-muted: rgba(45,212,191,0.14);
+
+      --accent3:       #fbbf24;
+      --accent3-light: #1a1200;
+      --accent3-muted: rgba(251,191,36,0.14);
+
+      --color-background-primary: #161d18;
+      --color-background-secondary: #1d2620;
+      --color-background-warning: #1a1200;
+      --color-border-tertiary: rgba(255,255,255,0.08);
+      --color-border-secondary: rgba(255,255,255,0.15);
+      --color-border-primary: rgba(255,255,255,0.30);
+      --color-border-warning: #92400e;
+      --color-text-primary: #e6f2ea;
+      --color-text-secondary: #8eaa94;
+      --color-text-tertiary: #4e6254;
+      --color-text-danger: #fca5a5;
+      --color-text-warning: #fbbf24;
+      --color-text-success: #6ee7b7;
+      --color-toggle-active-bg: #e6f2ea;
+      --color-toggle-active-text: #141c16;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.35);
     }
   }
 
-  body { font-family: var(--font-sans); background: var(--color-background-secondary); color: var(--color-text-primary); min-height: 100vh; padding: 2rem 1rem; }
-  .wrap { max-width: 720px; margin: 0 auto; }
+  body {
+    font-family: var(--font-ui);
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    padding: 2.5rem 1.25rem;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
 
-  /* Header */
-  .header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; gap: 12px; flex-wrap: wrap; }
-  .header-row h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
-  .header-meta { font-size: 11px; color: var(--color-text-tertiary); text-align: right; line-height: 1.6; flex-shrink: 0; }
-  .header-meta strong { color: var(--color-text-secondary); font-weight: 500; }
+  /* ── Header ── */
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-bottom: 1.5rem;
+    border-bottom: 1.5px solid var(--color-border-tertiary);
+  }
+  .header-row h1 { font-size: 22px; font-weight: 700; color: var(--color-text-primary); letter-spacing: -0.3px; margin: 0; }
+  .header-meta { font-size: 12px; color: var(--color-text-tertiary); text-align: right; line-height: 1.8; flex-shrink: 0; }
+  .header-meta strong { color: var(--color-text-secondary); font-weight: 600; }
 
-  /* Layout primitives */
-  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 8px; }
-  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1rem 0; }
+  /* ── Section layout ── */
+  .section-block { margin-bottom: 1.75rem; }
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
 
-  /* Input rows */
-  .row { display: grid; gap: 8px; align-items: center; margin-bottom: 8px; }
-  .row-item { grid-template-columns: 1fr auto auto 28px; }
-  .row-discount { grid-template-columns: 1fr 28px; }
-  .row-tax { grid-template-columns: 1fr 28px; }
-  input[type=number] { width: 100%; font-size: 14px; padding: 6px 8px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); outline: none; }
-  input[type=number]:focus { box-shadow: 0 0 0 2px rgba(0,0,0,0.12); }
+  .card {
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .divider { height: 1px; background: var(--color-border-tertiary); margin: 1.25rem 0; }
 
-  /* Toggle buttons */
-  .toggle-group { display: inline-flex; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); overflow: hidden; background: var(--color-background-primary); }
-  .toggle-group button { background: none; border: none; border-right: 0.5px solid var(--color-border-secondary); color: var(--color-text-tertiary); font-size: 12px; font-family: var(--font-sans); cursor: pointer; padding: 5px 10px; line-height: 1.3; white-space: nowrap; transition: background 0.1s, color 0.1s; }
+  .col-head { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-text-tertiary); }
+
+  /* ── Input rows ── */
+  .row { display: grid; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .row-item { grid-template-columns: 1fr auto auto 30px; }
+  .row-discount { grid-template-columns: 1fr 30px; }
+  .row-tax { grid-template-columns: 1fr 30px; }
+
+  input[type=number] {
+    width: 100%; font-size: 15px; font-family: var(--font-ui);
+    padding: 8px 12px;
+    border: 1.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input[type=number]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-muted); }
+  input[type=number]::placeholder { color: var(--color-text-tertiary); }
+
+  /* ── Toggle buttons ── */
+  .toggle-group {
+    display: inline-flex;
+    border: 1.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    background: var(--color-background-primary);
+  }
+  .toggle-group button {
+    background: none; border: none;
+    border-right: 1px solid var(--color-border-secondary);
+    color: var(--color-text-tertiary);
+    font-size: 12.5px; font-family: var(--font-ui);
+    cursor: pointer; padding: 7px 12px;
+    line-height: 1.3; white-space: nowrap;
+    transition: background 0.12s, color 0.12s;
+  }
   .toggle-group button:last-child { border-right: none; }
-  .toggle-group button:hover:not(.active) { background: var(--color-background-secondary); color: var(--color-text-secondary); }
-  .toggle-group button.active { background: var(--color-toggle-active-bg); color: var(--color-toggle-active-text); font-weight: 500; }
+  .toggle-group button:hover:not(.active) { background: var(--accent-light); color: var(--accent); }
+  .toggle-group button.active { background: var(--color-toggle-active-bg); color: var(--color-toggle-active-text); font-weight: 600; }
 
-  /* Misc controls */
-  .add-btn { background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); color: var(--color-text-secondary); font-size: 13px; cursor: pointer; padding: 5px 10px; white-space: nowrap; margin-top: 4px; }
-  .add-btn:hover { background: var(--color-background-secondary); }
-  .rm-btn { background: none; border: none; color: var(--color-text-tertiary); font-size: 16px; cursor: pointer; padding: 2px 4px; line-height: 1; }
-  .rm-btn:hover { color: var(--color-text-danger); }
-  .col-head { font-size: 11px; color: var(--color-text-tertiary); }
+  .add-btn {
+    background: none;
+    border: 1.5px dashed var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    color: var(--color-text-secondary); font-size: 13.5px; font-family: var(--font-ui);
+    cursor: pointer; padding: 7px 14px; white-space: nowrap; margin-top: 6px;
+    transition: border-color 0.12s, color 0.12s, background 0.12s;
+  }
+  .add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); border-style: solid; }
 
-  /* Results */
-  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
-  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
-  .metric-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
-  .metric-value { font-size: 18px; font-weight: 500; color: var(--color-text-primary); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-  .metric-formula { font-size: 11px; color: var(--color-text-tertiary); margin-top: 3px; font-family: var(--font-mono); }
-  .calc-line { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; gap: 8px; }
+  .rm-btn {
+    background: none; border: none;
+    color: var(--color-text-tertiary); font-size: 18px;
+    cursor: pointer; padding: 2px 4px; line-height: 1; border-radius: 4px;
+    transition: color 0.1s, background 0.1s;
+  }
+  .rm-btn:hover { color: var(--color-text-danger); background: rgba(185,28,28,0.08); }
+
+  /* ── Results ── */
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem 1.1rem; border: 1px solid var(--color-border-tertiary); }
+  .metric-label { font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 6px; }
+  .metric-value { font-size: 20px; font-weight: 600; color: var(--color-text-primary); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .metric-formula { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; font-family: var(--font-mono); }
+
+  .calc-line { display: flex; justify-content: space-between; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--color-border-tertiary); font-size: 14px; gap: 8px; }
   .calc-line:last-child { border-bottom: none; }
   .calc-label { color: var(--color-text-secondary); }
-  .calc-val { font-weight: 500; color: var(--color-text-primary); display: inline-flex; align-items: center; gap: 4px; }
-  .calc-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
-  .total-line { display: flex; justify-content: space-between; padding: 10px 0 0; font-size: 15px; font-weight: 500; border-top: 1px solid var(--color-border-secondary); margin-top: 4px; align-items: center; }
-  .step-tag { display: inline-block; font-size: 10px; font-weight: 500; background: var(--color-background-secondary); color: var(--color-text-tertiary); border-radius: 4px; padding: 2px 6px; margin-right: 6px; flex-shrink: 0; }
-  .tax-row-detail { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; align-items: center; }
-  .zero-state { font-size: 13px; color: var(--color-text-tertiary); padding: 12px 0; }
+  .calc-val { font-weight: 600; color: var(--color-text-primary); display: inline-flex; align-items: center; gap: 4px; }
+  .calc-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 3px; }
+
+  .total-line { display: flex; justify-content: space-between; padding: 12px 0 0; font-size: 15px; font-weight: 600; border-top: 1.5px solid var(--color-border-secondary); margin-top: 4px; align-items: center; }
+
+  /* teal step tags */
+  .step-tag { display: inline-block; font-size: 10px; font-weight: 700; background: var(--accent2-muted); color: var(--accent2); border-radius: 4px; padding: 2px 7px; margin-right: 7px; flex-shrink: 0; }
+
+  .tax-row-detail { display: flex; justify-content: space-between; font-size: 14px; padding: 7px 0; align-items: center; border-bottom: 1px solid var(--color-border-tertiary); }
+  .tax-row-detail:last-child { border-bottom: none; }
+  .zero-state { font-size: 14px; color: var(--color-text-tertiary); padding: 16px 0; text-align: center; }
   .neg { color: var(--color-text-danger); }
 
-  /* Precision tooltip */
-  .precision-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); font-size: 9px; color: var(--color-text-tertiary); cursor: default; position: relative; flex-shrink: 0; }
+  /* ── Precision tooltip ── */
+  .precision-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: var(--color-background-secondary); border: 1px solid var(--color-border-secondary); font-size: 9px; color: var(--color-text-tertiary); cursor: default; position: relative; flex-shrink: 0; }
   .precision-icon:hover .tooltip { display: block; }
-  .tooltip { display: none; position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%); background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 4px 8px; font-size: 12px; color: var(--color-text-primary); white-space: nowrap; z-index: 99; font-weight: 400; pointer-events: none; }
-  .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--color-border-secondary); }
+  .tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--color-background-primary); border: 1px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 5px 10px; font-size: 12px; color: var(--color-text-primary); white-space: nowrap; z-index: 99; font-weight: 400; pointer-events: none; box-shadow: var(--shadow-md); }
+  .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--color-border-secondary); }
 
-  /* Warning */
-  .warn-box { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 12px; color: var(--color-text-warning); margin-bottom: 1rem; }
+  /* ── Warning ── */
+  .warn-box { background: var(--color-background-warning); border: 1.5px solid var(--color-border-warning); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 13px; color: var(--color-text-warning); margin-bottom: 1.25rem; font-weight: 500; }
 
-  /* Comparison section (inside calc card) */
-  .compare-section { margin-top: 1rem; border-top: 1px solid var(--color-border-secondary); padding-top: 1rem; }
-  .compare-title { font-size: 12px; font-weight: 600; color: var(--color-text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.75rem; }
-  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .compare-col { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
-  .compare-col-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  /* ── Comparison ── */
+  .compare-section { margin-top: 1.25rem; border-top: 1.5px solid var(--color-border-secondary); padding-top: 1.25rem; }
+  .compare-title { font-size: 11px; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .compare-col { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem 1.1rem; border: 1px solid var(--color-border-tertiary); }
+  .compare-col-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--color-border-tertiary); }
   .compare-col-label.actual { color: var(--color-text-danger); }
   .compare-col-label.ideal { color: var(--color-text-success); }
-  .compare-line { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; gap: 8px; }
+  .compare-line { display: flex; justify-content: space-between; font-size: 12.5px; padding: 4px 0; gap: 8px; }
   .compare-line .cl { color: var(--color-text-secondary); }
-  .compare-line .cv { font-weight: 500; color: var(--color-text-primary); font-family: var(--font-mono); font-size: 12px; }
-  .compare-diff { margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-secondary); display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; }
-  .diff-badge { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
-  .diff-badge.over { background: rgba(163,45,45,0.12); color: var(--color-text-danger); }
-  .diff-badge.under { background: rgba(42,122,59,0.12); color: var(--color-text-success); }
+  .compare-line .cv { font-weight: 600; color: var(--color-text-primary); font-family: var(--font-mono); font-size: 12px; }
+  .compare-diff { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--color-border-secondary); display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; font-weight: 500; }
+  .diff-badge { font-size: 12px; padding: 3px 10px; border-radius: 6px; font-weight: 700; letter-spacing: 0.02em; }
+  .diff-badge.over { background: rgba(185,28,28,0.12); color: var(--color-text-danger); }
+  .diff-badge.under { background: rgba(22,101,52,0.12); color: var(--color-text-success); }
 
-  /* ── Info section — styled to match the calculator ── */
-  .info-section { margin-top: 0; }
-  /* The section-label + card above already handle the container */
-  .info-card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; }
-  .info-card-body p { margin-bottom: 0.65rem; }
+  /* ── Info section ── */
+  .info-card-body { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
+  .info-card-body p { margin-bottom: 0.75rem; }
   .info-card-body p:last-child { margin-bottom: 0; }
 
-  /* Formula table — looks like the results-grid metrics */
-  .formula-table { display: grid; grid-template-columns: auto 1fr; gap: 0; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; margin: 0.75rem 0; }
+  .formula-table { display: grid; grid-template-columns: auto 1fr; gap: 0; border: 1px solid var(--color-border-secondary); border-radius: var(--border-radius-md); overflow: hidden; margin: 1rem 0; }
   .formula-table-row { display: contents; }
-  .formula-table-row .ft-lhs { background: var(--color-background-secondary); font-size: 11px; color: var(--color-text-tertiary); padding: 7px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); white-space: nowrap; display: flex; align-items: center; }
-  .formula-table-row .ft-rhs { background: var(--color-background-primary); font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); padding: 7px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; }
-  .formula-table-row:last-child .ft-lhs,
-  .formula-table-row:last-child .ft-rhs { border-bottom: none; }
-  .formula-table-note { font-size: 11px; color: var(--color-text-tertiary); margin-top: -0.25rem; margin-bottom: 0.75rem; padding: 0 2px; line-height: 1.5; }
+  .formula-table-row .ft-lhs { background: var(--color-background-secondary); font-size: 12px; font-weight: 600; color: var(--color-text-secondary); padding: 9px 14px; border-bottom: 1px solid var(--color-border-tertiary); white-space: nowrap; display: flex; align-items: center; }
+  .formula-table-row .ft-rhs { background: var(--color-background-primary); font-family: var(--font-mono); font-size: 13px; color: var(--color-text-primary); padding: 9px 14px; border-bottom: 1px solid var(--color-border-tertiary); display: flex; align-items: center; }
+  .formula-table-row:last-child .ft-lhs, .formula-table-row:last-child .ft-rhs { border-bottom: none; }
+  .formula-table-note { font-size: 12px; color: var(--color-text-tertiary); margin-top: -0.5rem; margin-bottom: 1rem; padding: 0 2px; line-height: 1.6; }
 
-  /* Scenario list — styled like calc-lines */
-  .scenario-list { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; margin: 0.75rem 0; }
-  .scenario-item { padding: 0.65rem 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; color: var(--color-text-secondary); line-height: 1.55; }
+  .scenario-list { border: 1px solid var(--color-border-secondary); border-radius: var(--border-radius-md); overflow: hidden; margin: 1rem 0; }
+  .scenario-item { padding: 0.85rem 1.1rem; border-bottom: 1px solid var(--color-border-tertiary); font-size: 13.5px; color: var(--color-text-secondary); line-height: 1.65; }
   .scenario-item:last-child { border-bottom: none; }
-  .scenario-item strong { color: var(--color-text-primary); font-weight: 500; display: block; margin-bottom: 2px; }
+  .scenario-item strong { color: var(--color-text-primary); font-weight: 600; display: block; margin-bottom: 3px; }
 
-  /* Recommendation — styled like a metric card */
-  .rec-metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-top: 0.75rem; }
-  .rec-metric .metric-label { margin-bottom: 6px; }
-  .rec-metric p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+  /* amber recommendation box */
+  .rec-metric { background: var(--accent3-light); border: 1px solid var(--accent3-muted); border-left: 3px solid var(--accent3); border-radius: var(--border-radius-md); padding: 1rem 1.1rem; margin-top: 1rem; }
+  .rec-metric .metric-label { margin-bottom: 8px; color: var(--accent3); }
+  .rec-metric p { font-size: 13.5px; color: var(--color-text-secondary); line-height: 1.65; margin: 0; }
 
-  @media (max-width: 480px) {
+  /* ── SQL syntax colors (dark code block) ── */
+  .sql-kw  { color: #1a6e52; font-weight: 600; }    /* SELECT FROM WHERE AND ORDER BY — dark green */
+  .sql-kw2 { color: #7c3aab; font-weight: 600; }    /* CASE WHEN THEN END — purple */
+  .sql-col { color: #0e6b9e; }                       /* [column] refs — blue */
+  .sql-str { color: #b85c20; }                       /* 'string literals' — burnt orange */
+  .sql-num { color: #6a7c3a; }                       /* numbers — olive green */
+  .sql-var { color: #b07020; font-style: italic; }   /* @variable — amber */
+  .sql-ali { color: #445048; font-style: italic; }   /* table alias ii — muted dark */
+  .sql-pun { color: #8aaa90; }                       /* punctuation . , ; = — muted green */
+
+  @media (max-width: 520px) {
     .header-meta { text-align: left; }
     .results-grid { grid-template-columns: 1fr; }
     .compare-grid { grid-template-columns: 1fr; }
+    .row-item { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -170,153 +295,155 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:1rem;border-left:3px solid var(--color-border-primary);">
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-      <div style="font-size:16px;margin-top:1px;flex-shrink:0;">📋</div>
+  <!-- Getting started card — green left border -->
+  <div class="card" style="margin-bottom:1.75rem; border-left: 4px solid var(--accent);">
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <div style="font-size:18px;margin-top:2px;flex-shrink:0;">📋</div>
       <div style="flex:1;">
-        <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">Getting started</div>
-        <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.65;">
+        <div style="font-size:14px;font-weight:700;color:var(--color-text-primary);margin-bottom:6px;">Getting started</div>
+        <div style="font-size:14px;color:var(--color-text-secondary);line-height:1.7;">
           Before entering items, query the invoice in your database to retrieve each line's amount, taxable status, and discountable status.
           Price modifiers (discount and fee items) are included and will appear at the bottom of the results — enter them in the
-          <strong style="color:var(--color-text-primary);font-weight:500;">Discount items</strong> section below, not as invoice items.
+          <strong style="color:var(--color-text-primary);font-weight:600;">Discount items</strong> section below, not as invoice items.
         </div>
-        <div style="margin-top:10px;">
-          <button onclick="(function(btn){const block=document.getElementById('sql-block');const arrow=document.getElementById('sql-arrow');const open=block.style.display==='none'||block.style.display==='';block.style.display=open?'block':'none';arrow.style.transform=open?'rotate(90deg)':'rotate(0deg)'})(this)"
-            style="background:none;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);font-size:12px;font-family:var(--font-sans);cursor:pointer;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;">
+        <div style="margin-top:12px;">
+          <button onclick="(function(){const block=document.getElementById('sql-block');const arrow=document.getElementById('sql-arrow');const open=block.style.display==='none'||block.style.display==='';block.style.display=open?'block':'none';arrow.style.transform=open?'rotate(90deg)':'rotate(0deg)'})()"
+            style="background:none;border:1.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);font-size:13px;font-family:var(--font-ui);cursor:pointer;padding:6px 12px;display:inline-flex;align-items:center;gap:6px;">
             <span id="sql-arrow" style="display:inline-block;transition:transform 0.2s;font-size:10px;">▶</span>
             View SQL query
           </button>
         </div>
-        <div id="sql-block" style="display:none;margin-top:8px;">
+        <div id="sql-block" style="display:none;margin-top:10px;">
           <div style="position:relative;">
-            <pre style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:0.85rem 1rem;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);overflow-x:auto;line-height:1.7;margin:0;">select 
-    ii.[Id],
-    ii.[SkuName]               as [Item Code],
-    ii.[Description],
-    ii.[Total],
-    ii.[Taxable],
-    ii.[AllowDiscounts]        as [Discountable],
-    ii.[SkuReference.SkuType]
-from [dbo].[InvoiceItem] ii
-where ii.[Invoice.Id] = @InvoiceID
-  and ii.[Active] = 1
-order by ii.[SkuReference.SkuType]</pre>
-            <button onclick="(function(){const text=`select \n    ii.[Id],\n    ii.[SkuName]               as [Item Code],\n    ii.[Description],\n    ii.[Total],\n    ii.[Taxable],\n    ii.[AllowDiscounts]        as [Discountable],\n    ii.[SkuReference.SkuType]\nfrom [dbo].[InvoiceItem] ii\nwhere ii.[Invoice.Id] = @InvoiceID\n  and ii.[Active] = 1\norder by ii.[SkuReference.SkuType]`;navigator.clipboard.writeText(text).then(()=>{const btn=document.getElementById('copy-btn');btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500)})})()"
+            <pre style="background:#e8f4ee;border:1px solid rgba(58,156,110,0.20);border-radius:var(--border-radius-md);padding:1rem 1.1rem;padding-right:4.5rem;font-family:var(--font-mono);font-size:12.5px;color:#1a2e22;overflow-x:auto;line-height:1.9;margin:0;"><span class="sql-kw">SELECT</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Id]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuName]</span>        <span class="sql-kw">AS</span> <span class="sql-col">[Item Code]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Description]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Total]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Taxable]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[AllowDiscounts]</span> <span class="sql-kw">AS</span> <span class="sql-col">[Discountable]</span><span class="sql-pun">,</span>&#10;    <span class="sql-kw2">CASE</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuReference.SkuType]</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">0</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Service'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">1</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Material'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">2</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Equipment'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">3</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Price Modifier'</span>&#10;    <span class="sql-kw2">END</span> <span class="sql-kw">AS</span> <span class="sql-col">[Item Type]</span>&#10;<span class="sql-kw">FROM</span> <span class="sql-col">[dbo]</span><span class="sql-pun">.</span><span class="sql-col">[InvoiceItem]</span> <span class="sql-ali">ii</span>&#10;<span class="sql-kw">WHERE</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Invoice.Id]</span> <span class="sql-pun">=</span> <span class="sql-var">@InvoiceID</span>&#10;  <span class="sql-kw">AND</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Active]</span> <span class="sql-pun">=</span> <span class="sql-num">1</span>&#10;<span class="sql-kw">ORDER BY</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuReference.SkuType]</span><span class="sql-pun">;</span></pre>
+            <button onclick="(function(){const text=`SELECT \n    ii.[Id],\n    ii.[SkuName]        AS [Item Code],\n    ii.[Description],\n    ii.[Total],\n    ii.[Taxable],\n    ii.[AllowDiscounts] AS [Discountable],\n    CASE ii.[SkuReference.SkuType]\n        WHEN 0 THEN 'Service'\n        WHEN 1 THEN 'Material'\n        WHEN 2 THEN 'Equipment'\n        WHEN 3 THEN 'Price Modifier'\n    END AS [Item Type]\nFROM [dbo].[InvoiceItem] ii\nWHERE ii.[Invoice.Id] = @InvoiceID\n  AND ii.[Active] = 1\nORDER BY ii.[SkuReference.SkuType];`;navigator.clipboard.writeText(text).then(()=>{const btn=document.getElementById('copy-btn');btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500)})})()"
               id="copy-btn"
-              style="position:absolute;top:8px;right:8px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:6px;color:var(--color-text-tertiary);font-size:11px;font-family:var(--font-sans);cursor:pointer;padding:3px 8px;">Copy</button>
+              style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.7);border:1px solid rgba(58,156,110,0.25);border-radius:6px;color:#3a7a58;font-size:11.5px;font-family:var(--font-ui);cursor:pointer;padding:4px 10px;">Copy</button>
           </div>
-          <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px;padding:0 2px;">Replace <code style="font-family:var(--font-mono);background:var(--color-background-secondary);padding:1px 4px;border-radius:3px;">@InvoiceID</code> with the target invoice ID before running.</div>
+          <div style="font-size:12px;color:var(--color-text-tertiary);margin-top:7px;padding:0 2px;">Replace <code style="font-family:var(--font-mono);background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">@InvoiceID</code> with the target invoice ID before running.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="section-label">Invoice items</div>
-  <div class="card">
-    <div class="row row-item" style="margin-bottom:4px;">
-      <div class="col-head">Amount ($)</div>
-      <div class="col-head">Taxable?</div>
-      <div class="col-head">Discountable?</div>
-      <div></div>
-    </div>
-    <div id="items-container"></div>
-    <button class="add-btn" onclick="addItem()">+ Add item</button>
-  </div>
-
-  <div class="section-label">Discount items</div>
-  <div class="card">
-    <div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:10px;">Discount items are always non-taxable. Enter the discount value as a positive number.</div>
-    <div class="row row-discount" style="margin-bottom:4px;">
-      <div class="col-head">Discount amount ($)</div>
-      <div></div>
-    </div>
-    <div id="discounts-container"></div>
-    <button class="add-btn" onclick="addDiscount()">+ Add discount item</button>
-  </div>
-
-  <div class="section-label">Tax rates</div>
-  <div class="card">
-    <div class="row row-tax" style="margin-bottom:4px;">
-      <div class="col-head">Rate (%)</div>
-      <div></div>
-    </div>
-    <div id="taxes-container"></div>
-    <button class="add-btn" onclick="addTax()">+ Add tax rate</button>
-  </div>
-
-  <div class="section-label">Calculation</div>
-  <div class="card">
-    <div class="zero-state" id="zero-state">Enter items above to see the breakdown.</div>
-    <div id="results-content" style="display:none;">
-      <div id="warn-neg" class="warn-box" style="display:none;">The discountable pool is negative — the proration factor is negative, which increases taxable line amounts instead of reducing them.</div>
-      <div class="results-grid">
-        <div class="metric"><div class="metric-label">Taxable total (before proration)</div><div class="metric-value" id="r-taxable-before"></div><div class="metric-formula" id="r-taxable-before-formula"></div></div>
-        <div class="metric"><div class="metric-label">Discountable pool</div><div class="metric-value" id="r-pool"></div><div class="metric-formula" id="r-pool-formula"></div></div>
-        <div class="metric"><div class="metric-label">Total discount</div><div class="metric-value" id="r-discount"></div><div class="metric-formula" id="r-discount-formula"></div></div>
-        <div class="metric"><div class="metric-label">Proration factor</div><div class="metric-value" id="r-factor"></div><div class="metric-formula" id="r-factor-formula"></div></div>
+  <div class="section-block">
+    <div class="section-label">Invoice items</div>
+    <div class="card">
+      <div class="row row-item" style="margin-bottom:6px;">
+        <div class="col-head">Amount ($)</div>
+        <div class="col-head">Taxable?</div>
+        <div class="col-head">Discountable?</div>
+        <div></div>
       </div>
-      <div class="divider"></div>
-      <div id="steps-detail"></div>
-      <div class="divider"></div>
-      <div class="metric" style="margin-bottom:1rem;"><div class="metric-label">New taxable total (after proration)</div><div class="metric-value" style="font-size:22px;" id="r-taxable-after"></div></div>
-      <div id="tax-breakdown"></div>
-      <div class="total-line">
-        <span>Total tax</span>
-        <span class="calc-val" id="r-totaltax"></span>
-      </div>
-      <div class="total-line" style="font-size:17px; padding-top:12px; margin-top:4px; border-top: 1.5px solid var(--color-border-primary);">
-        <span>Invoice total</span>
-        <span class="calc-val" id="r-invoicetotal"></span>
-      </div>
-      <div id="compare-section" style="display:none;"></div>
+      <div id="items-container"></div>
+      <button class="add-btn" onclick="addItem()">+ Add item</button>
     </div>
   </div>
 
-  <div class="section-label">How ServiceTitan Discount Items affect tax</div>
-  <div class="card info-section">
-    <div class="info-card-body">
-      <p>Discount items in ServiceTitan are applied <strong>proportionally (prorated)</strong> across all discountable lines on the invoice — they do not simply subtract a flat amount.</p>
-
-      <div class="formula-table">
-        <div class="formula-table-row">
-          <div class="ft-lhs">Discountable pool</div>
-          <div class="ft-rhs">= sum of all discountable line amounts</div>
-        </div>
-        <div class="formula-table-row">
-          <div class="ft-lhs">Proration factor</div>
-          <div class="ft-rhs">= Total discount ÷ Discountable pool</div>
-        </div>
-        <div class="formula-table-row">
-          <div class="ft-lhs">Allocated discount</div>
-          <div class="ft-rhs">= Line amount × Proration factor</div>
-        </div>
-        <div class="formula-table-row">
-          <div class="ft-lhs">Adjusted line amount</div>
-          <div class="ft-rhs">= Line amount − Allocated discount</div>
-        </div>
+  <div class="section-block">
+    <div class="section-label">Discount items</div>
+    <div class="card">
+      <div style="font-size:13px;color:var(--color-text-tertiary);margin-bottom:12px;padding:8px 10px;background:var(--color-background-secondary);border-radius:7px;">Discount items are always non-taxable. Enter the discount value as a positive number.</div>
+      <div class="row row-discount" style="margin-bottom:6px;">
+        <div class="col-head">Discount amount ($)</div>
+        <div></div>
       </div>
-      <div class="formula-table-note">Only discountable lines receive an allocation. Non-discountable lines are unchanged. The adjusted amounts of taxable lines are summed to produce the new taxable total.</div>
+      <div id="discounts-container"></div>
+      <button class="add-btn" onclick="addDiscount()">+ Add discount item</button>
+    </div>
+  </div>
 
-      <p>This can produce unexpected results in several scenarios:</p>
-
-      <div class="scenario-list">
-        <div class="scenario-item">
-          <strong>Negative discountable pool</strong>
-          If discountable lines include negative amounts (e.g., credits or negative service items) that bring the pool total below zero, the proration factor turns negative. A negative factor causes allocated discounts to be subtracted as negative numbers — which <em>increases</em> taxable line amounts rather than reducing them, resulting in a higher taxable total and more tax than expected.
-        </div>
-        <div class="scenario-item">
-          <strong>Mixed taxable / non-taxable discountable lines</strong>
-          Because the discount is spread proportionally across all discountable lines regardless of their taxability, the effective reduction on taxable lines may be larger or smaller than the face value of the discount — making tax outcomes difficult to predict.
-        </div>
-        <div class="scenario-item">
-          <strong>Non-discountable taxable lines</strong>
-          Any taxable line marked non-discountable is completely unaffected by the proration and retains its full original amount for tax purposes.
-        </div>
+  <div class="section-block">
+    <div class="section-label">Tax rates</div>
+    <div class="card">
+      <div class="row row-tax" style="margin-bottom:6px;">
+        <div class="col-head">Rate (%)</div>
+        <div></div>
       </div>
+      <div id="taxes-container"></div>
+      <button class="add-btn" onclick="addTax()">+ Add tax rate</button>
+    </div>
+  </div>
 
-      <div class="rec-metric">
-        <div class="metric-label">Our recommendation</div>
-        <p>We strongly recommend <strong>not using Discount Items</strong> on invoices where tax is being charged. Instead, apply discounts using <strong>negative-amount service items</strong>. Unlike discount items, negative service items can be marked as taxable, giving you direct and predictable control over how the discount affects the taxable total.</p>
+  <div class="section-block">
+    <div class="section-label">Calculation</div>
+    <div class="card">
+      <div class="zero-state" id="zero-state">Enter items above to see the breakdown.</div>
+      <div id="results-content" style="display:none;">
+        <div id="warn-neg" class="warn-box" style="display:none;">⚠️ The discountable pool is negative — the proration factor is negative, which increases taxable line amounts instead of reducing them.</div>
+        <div class="results-grid">
+          <div class="metric"><div class="metric-label">Taxable total (before proration)</div><div class="metric-value" id="r-taxable-before"></div><div class="metric-formula" id="r-taxable-before-formula"></div></div>
+          <div class="metric"><div class="metric-label">Discountable pool</div><div class="metric-value" id="r-pool"></div><div class="metric-formula" id="r-pool-formula"></div></div>
+          <div class="metric"><div class="metric-label">Total discount</div><div class="metric-value" id="r-discount"></div><div class="metric-formula" id="r-discount-formula"></div></div>
+          <div class="metric"><div class="metric-label">Proration factor</div><div class="metric-value" id="r-factor"></div><div class="metric-formula" id="r-factor-formula"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div id="steps-detail"></div>
+        <div class="divider"></div>
+        <!-- teal accent on key result -->
+        <div class="metric" style="margin-bottom:1.25rem;border-left:3px solid var(--accent2);"><div class="metric-label">New taxable total (after proration)</div><div class="metric-value" style="font-size:26px;" id="r-taxable-after"></div></div>
+        <div id="tax-breakdown"></div>
+        <div class="total-line">
+          <span>Total tax</span>
+          <span class="calc-val" id="r-totaltax"></span>
+        </div>
+        <!-- amber accent on invoice total -->
+        <div class="total-line" style="font-size:19px;padding-top:14px;margin-top:6px;border-top:2px solid var(--accent3);color:var(--accent3);">
+          <span>Invoice total</span>
+          <span class="calc-val" id="r-invoicetotal"></span>
+        </div>
+        <div id="compare-section" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">How ServiceTitan Discount Items affect tax</div>
+    <div class="card">
+      <div class="info-card-body">
+        <p>Discount items in ServiceTitan are applied <strong>proportionally (prorated)</strong> across all discountable lines on the invoice — they do not simply subtract a flat amount.</p>
+
+        <div class="formula-table">
+          <div class="formula-table-row">
+            <div class="ft-lhs">Discountable pool</div>
+            <div class="ft-rhs">= sum of all discountable line amounts</div>
+          </div>
+          <div class="formula-table-row">
+            <div class="ft-lhs">Proration factor</div>
+            <div class="ft-rhs">= Total discount ÷ Discountable pool</div>
+          </div>
+          <div class="formula-table-row">
+            <div class="ft-lhs">Allocated discount</div>
+            <div class="ft-rhs">= Line amount × Proration factor</div>
+          </div>
+          <div class="formula-table-row">
+            <div class="ft-lhs">Adjusted line amount</div>
+            <div class="ft-rhs">= Line amount − Allocated discount</div>
+          </div>
+        </div>
+        <div class="formula-table-note">Only discountable lines receive an allocation. Non-discountable lines are unchanged. The adjusted amounts of taxable lines are summed to produce the new taxable total.</div>
+
+        <p>This can produce unexpected results in several scenarios:</p>
+
+        <div class="scenario-list">
+          <div class="scenario-item">
+            <strong>Negative discountable pool</strong>
+            If discountable lines include negative amounts (e.g., credits or negative service items) that bring the pool total below zero, the proration factor turns negative. A negative factor causes allocated discounts to be subtracted as negative numbers — which <em>increases</em> taxable line amounts rather than reducing them, resulting in a higher taxable total and more tax than expected.
+          </div>
+          <div class="scenario-item">
+            <strong>Mixed taxable / non-taxable discountable lines</strong>
+            Because the discount is spread proportionally across all discountable lines regardless of their taxability, the effective reduction on taxable lines may be larger or smaller than the face value of the discount — making tax outcomes difficult to predict.
+          </div>
+          <div class="scenario-item">
+            <strong>Non-discountable taxable lines</strong>
+            Any taxable line marked non-discountable is completely unaffected by the proration and retains its full original amount for tax purposes.
+          </div>
+        </div>
+
+        <div class="rec-metric">
+          <div class="metric-label">Our recommendation</div>
+          <p>We strongly recommend <strong>not using Discount Items</strong> on invoices where tax is being charged. Instead, apply discounts using <strong>negative-amount service items</strong>. Unlike discount items, negative service items can be marked as taxable, giving you direct and predictable control over how the discount affects the taxable total.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -417,7 +544,6 @@ function calculate() {
   const isNegPool = discountablePool < 0 && totalDiscount > 0;
   document.getElementById('warn-neg').style.display = isNegPool ? 'block' : 'none';
 
-  // Metric values + inline formulas
   document.getElementById('r-taxable-before').innerHTML = pHtml(taxableBeforeProration);
   const taxableItems = parsed.filter(i => i.taxable === 'yes');
   document.getElementById('r-taxable-before-formula').textContent =
@@ -437,8 +563,7 @@ function calculate() {
   document.getElementById('r-factor-formula').textContent =
     factor !== null ? `${fmtNum(totalDiscount)} ÷ ${fmtNum(discountablePool)} = ${factor.toFixed(10)}` : '';
 
-  // Line item breakdown
-  let stepsHtml = `<div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:8px; font-weight:500;">Line item breakdown</div>`;
+  let stepsHtml = `<div style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Line item breakdown</div>`;
   adjusted.forEach((item, idx) => {
     const tLabel = item.taxable === 'yes' ? 'taxable' : 'non-taxable';
     const dLabel = item.discountable === 'yes' ? 'discountable' : 'non-discountable';
@@ -447,13 +572,13 @@ function calculate() {
       <div style="flex:1;">
         <span class="step-tag">${idx+1}</span>
         <span class="calc-label">Line ${idx+1}</span>
-        <span style="font-size:11px;color:var(--color-text-tertiary);margin-left:6px;">${tLabel} · ${dLabel}</span>
-        ${hasAlloc ? `<div class="calc-sub" style="padding-left:28px;">
+        <span style="font-size:12px;color:var(--color-text-tertiary);margin-left:7px;">${tLabel} · ${dLabel}</span>
+        ${hasAlloc ? `<div class="calc-sub" style="padding-left:30px;">
           Allocation: ${pHtml(item.amt)} × ${factor.toFixed(6)} = ${pHtml(item.allocation)}
           &nbsp;→&nbsp; ${pHtml(item.amt)} − ${pHtml(item.allocation)} = ${pHtml(item.newAmt)}
         </div>` : ''}
       </div>
-      <div style="text-align:right; white-space:nowrap;">
+      <div style="text-align:right;white-space:nowrap;">
         <div class="calc-val">${pHtml(item.newAmt)}</div>
         ${hasAlloc ? `<div class="calc-sub">was ${pHtml(item.amt)}</div>` : ''}
       </div>
@@ -461,8 +586,7 @@ function calculate() {
   });
   document.getElementById('steps-detail').innerHTML = stepsHtml;
 
-  // Tax breakdown
-  let taxHtml = `<div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:8px; font-weight:500;">Tax on ${pHtml(newTaxableTotal)} taxable total</div>`;
+  let taxHtml = `<div style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Tax on ${pHtml(newTaxableTotal)} taxable total</div>`;
   let totalTax = 0;
   taxes.forEach((t, idx) => {
     const rate = parseFloat(t.rate) || 0;
@@ -470,12 +594,12 @@ function calculate() {
     totalTax += taxAmt;
     taxHtml += `<div class="tax-row-detail">
       <span class="calc-label">Rate ${idx+1} <span style="color:var(--color-text-tertiary)">(${rate}%)</span>
-        <span style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-tertiary);margin-left:6px;">${fmtNum(newTaxableTotal)} × ${rate}% = ${fmtNum(taxAmt)}</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-tertiary);margin-left:7px;">${fmtNum(newTaxableTotal)} × ${rate}% = ${fmtNum(taxAmt)}</span>
       </span>
       <span class="calc-val">${pHtml(taxAmt)}</span>
     </div>`;
   });
-  if (taxes.length === 0) taxHtml += `<div class="calc-label" style="font-size:13px;padding:4px 0;">No tax rates added.</div>`;
+  if (taxes.length === 0) taxHtml += `<div class="calc-label" style="font-size:14px;padding:6px 0;">No tax rates added.</div>`;
   document.getElementById('r-taxable-after').innerHTML = pHtml(newTaxableTotal);
   document.getElementById('tax-breakdown').innerHTML = taxHtml;
   document.getElementById('r-totaltax').innerHTML = pHtml(totalTax);
@@ -484,7 +608,6 @@ function calculate() {
   const invoiceTotal = itemsTotal - totalDiscount + totalTax;
   document.getElementById('r-invoicetotal').innerHTML = pHtml(invoiceTotal);
 
-  // Comparison: actual vs if discount were taxable
   const compareEl = document.getElementById('compare-section');
   if (totalDiscount > 0 && taxes.length > 0) {
     const idealTaxableTotal = taxableBeforeProration - totalDiscount;
@@ -515,19 +638,19 @@ function calculate() {
               const taxAmt = newTaxableTotal * rate / 100;
               return `<div class="compare-line"><span class="cl">Rate ${idx+1} (${rate}%)</span><span class="cv">${fmtNum(newTaxableTotal)} × ${rate}% = ${fmtNum(taxAmt)}</span></div>`;
             }).join('')}
-            <div class="compare-line" style="font-weight:600;padding-top:4px;border-top:0.5px solid var(--color-border-tertiary);margin-top:4px;"><span class="cl">Total tax</span><span class="cv">${fmtNum(totalTax)}</span></div>
+            <div class="compare-line" style="font-weight:700;padding-top:5px;border-top:1px solid var(--color-border-tertiary);margin-top:5px;"><span class="cl">Total tax</span><span class="cv">${fmtNum(totalTax)}</span></div>
             <div class="compare-line"><span class="cl">Invoice total</span><span class="cv">${fmtNum(invoiceTotal)}</span></div>
           </div>
           <div class="compare-col">
             <div class="compare-col-label ideal">If discount were taxable (flat deduction)</div>
             <div class="compare-line"><span class="cl">${fmtNum(taxableBeforeProration)} − ${fmtNum(totalDiscount)}</span><span class="cv">${fmtNum(idealTaxableTotal)}</span></div>
             ${idealTaxRows}
-            <div class="compare-line" style="font-weight:600;padding-top:4px;border-top:0.5px solid var(--color-border-tertiary);margin-top:4px;"><span class="cl">Total tax</span><span class="cv">${fmtNum(idealTotalTax)}</span></div>
+            <div class="compare-line" style="font-weight:700;padding-top:5px;border-top:1px solid var(--color-border-tertiary);margin-top:5px;"><span class="cl">Total tax</span><span class="cv">${fmtNum(idealTotalTax)}</span></div>
             <div class="compare-line"><span class="cl">Invoice total</span><span class="cv">${fmtNum(idealInvoiceTotal)}</span></div>
           </div>
         </div>
         <div class="compare-diff">
-          <span style="font-size:13px;color:var(--color-text-secondary);">Tax difference</span>
+          <span style="font-size:14px;color:var(--color-text-secondary);">Tax difference</span>
           <span class="diff-badge ${taxDiff >= 0 ? 'over' : 'under'}">${taxDiff >= 0 ? '+' : '−'}$${Math.abs(taxDiff).toFixed(2)} ${taxDiff >= 0 ? 'overcharged' : 'saved'}</span>
         </div>
       </div>`;
