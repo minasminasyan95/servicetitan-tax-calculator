@@ -276,11 +276,60 @@
   .sql-ali { color: #445048; font-style: italic; }   /* table alias ii — muted dark */
   .sql-pun { color: #8aaa90; }                       /* punctuation . , ; = — muted green */
 
-  @media (max-width: 520px) {
-    .header-meta { text-align: left; }
+  @media (max-width: 560px) {
+    /* ── Spacing ── */
+    body { padding: 1.25rem 0.75rem; font-size: 14px; }
+    .wrap { width: 100%; }
+    .card { padding: 1rem; border-radius: 12px; }
+    .section-block { margin-bottom: 1.35rem; }
+
+    /* ── Header ── */
+    .header-row { flex-direction: column; gap: 4px; margin-bottom: 1.5rem; padding-bottom: 1rem; }
+    .header-row h1 { font-size: 19px; }
+    .header-meta { text-align: left; font-size: 11.5px; }
+
+    /* ── Invoice item rows: input full-width top, then toggles + remove below ── */
+    .row-item {
+      grid-template-columns: 1fr 1fr 30px;
+      grid-template-rows: auto auto;
+      row-gap: 8px;
+    }
+    .row-item input[type=number] { grid-column: 1 / -1; }
+    /* Hide col-head row on mobile — labels don't match the stacked layout */
+    .col-heads-row { display: none; }
+
+    /* ── Results & comparison grids ── */
     .results-grid { grid-template-columns: 1fr; }
     .compare-grid { grid-template-columns: 1fr; }
-    .row-item { grid-template-columns: 1fr; }
+
+    /* ── Metric values ── */
+    .metric-value { font-size: 18px; }
+
+    /* ── Calc lines: allow wrapping on narrow screens ── */
+    .calc-line { flex-wrap: wrap; gap: 4px; }
+    .calc-sub { font-size: 10.5px; }
+
+    /* ── Total lines ── */
+    .total-line { font-size: 14px; }
+
+    /* ── Formula table: stack lhs above rhs ── */
+    .formula-table { grid-template-columns: 1fr; }
+    .formula-table-row .ft-lhs { border-bottom: none; font-size: 11px; padding: 7px 12px 2px; }
+    .formula-table-row .ft-rhs { border-bottom: 1px solid var(--color-border-tertiary); font-size: 12px; padding: 2px 12px 8px; }
+    .formula-table-row:last-child .ft-rhs { border-bottom: none; }
+
+    /* ── Compare lines ── */
+    .compare-line { flex-wrap: wrap; }
+    .compare-line .cv { font-size: 11px; }
+
+    /* ── Toggle buttons: slightly tighter ── */
+    .toggle-group button { padding: 6px 9px; font-size: 12px; }
+
+    /* ── Add button: full width ── */
+    .add-btn { width: 100%; text-align: center; margin-top: 8px; }
+
+    /* ── SQL block: smaller font ── */
+    .sql-block-pre { font-size: 11px !important; line-height: 1.75 !important; padding: 0.75rem 0.85rem !important; padding-right: 3.5rem !important; }
   }
 </style>
 </head>
@@ -315,7 +364,7 @@
         </div>
         <div id="sql-block" style="display:none;margin-top:10px;">
           <div style="position:relative;">
-            <pre style="background:#e8f4ee;border:1px solid rgba(58,156,110,0.20);border-radius:var(--border-radius-md);padding:1rem 1.1rem;padding-right:4.5rem;font-family:var(--font-mono);font-size:12.5px;color:#1a2e22;overflow-x:auto;line-height:1.9;margin:0;"><span class="sql-kw">SELECT</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Id]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuName]</span>        <span class="sql-kw">AS</span> <span class="sql-col">[Item Code]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Description]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Total]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Taxable]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[AllowDiscounts]</span> <span class="sql-kw">AS</span> <span class="sql-col">[Discountable]</span><span class="sql-pun">,</span>&#10;    <span class="sql-kw2">CASE</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuReference.SkuType]</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">0</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Service'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">1</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Material'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">2</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Equipment'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">3</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Price Modifier'</span>&#10;    <span class="sql-kw2">END</span> <span class="sql-kw">AS</span> <span class="sql-col">[Item Type]</span>&#10;<span class="sql-kw">FROM</span> <span class="sql-col">[dbo]</span><span class="sql-pun">.</span><span class="sql-col">[InvoiceItem]</span> <span class="sql-ali">ii</span>&#10;<span class="sql-kw">WHERE</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Invoice.Id]</span> <span class="sql-pun">=</span> <span class="sql-var">@InvoiceID</span>&#10;  <span class="sql-kw">AND</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Active]</span> <span class="sql-pun">=</span> <span class="sql-num">1</span>&#10;<span class="sql-kw">ORDER BY</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuReference.SkuType]</span><span class="sql-pun">;</span></pre>
+            <pre class="sql-block-pre" style="background:#e8f4ee;border:1px solid rgba(58,156,110,0.20);border-radius:var(--border-radius-md);padding:1rem 1.1rem;padding-right:4.5rem;font-family:var(--font-mono);font-size:12.5px;color:#1a2e22;overflow-x:auto;line-height:1.9;margin:0;"><span class="sql-kw">SELECT</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Id]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuName]</span>        <span class="sql-kw">AS</span> <span class="sql-col">[Item Code]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Description]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Total]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Taxable]</span><span class="sql-pun">,</span>&#10;    <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[AllowDiscounts]</span> <span class="sql-kw">AS</span> <span class="sql-col">[Discountable]</span><span class="sql-pun">,</span>&#10;    <span class="sql-kw2">CASE</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuReference.SkuType]</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">0</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Service'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">1</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Material'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">2</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Equipment'</span>&#10;        <span class="sql-kw2">WHEN</span> <span class="sql-num">3</span> <span class="sql-kw2">THEN</span> <span class="sql-str">'Price Modifier'</span>&#10;    <span class="sql-kw2">END</span> <span class="sql-kw">AS</span> <span class="sql-col">[Item Type]</span>&#10;<span class="sql-kw">FROM</span> <span class="sql-col">[dbo]</span><span class="sql-pun">.</span><span class="sql-col">[InvoiceItem]</span> <span class="sql-ali">ii</span>&#10;<span class="sql-kw">WHERE</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Invoice.Id]</span> <span class="sql-pun">=</span> <span class="sql-var">@InvoiceID</span>&#10;  <span class="sql-kw">AND</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[Active]</span> <span class="sql-pun">=</span> <span class="sql-num">1</span>&#10;<span class="sql-kw">ORDER BY</span> <span class="sql-ali">ii</span><span class="sql-pun">.</span><span class="sql-col">[SkuReference.SkuType]</span><span class="sql-pun">;</span></pre>
             <button onclick="(function(){const text=`SELECT \n    ii.[Id],\n    ii.[SkuName]        AS [Item Code],\n    ii.[Description],\n    ii.[Total],\n    ii.[Taxable],\n    ii.[AllowDiscounts] AS [Discountable],\n    CASE ii.[SkuReference.SkuType]\n        WHEN 0 THEN 'Service'\n        WHEN 1 THEN 'Material'\n        WHEN 2 THEN 'Equipment'\n        WHEN 3 THEN 'Price Modifier'\n    END AS [Item Type]\nFROM [dbo].[InvoiceItem] ii\nWHERE ii.[Invoice.Id] = @InvoiceID\n  AND ii.[Active] = 1\nORDER BY ii.[SkuReference.SkuType];`;navigator.clipboard.writeText(text).then(()=>{const btn=document.getElementById('copy-btn');btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500)})})()"
               id="copy-btn"
               style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.7);border:1px solid rgba(58,156,110,0.25);border-radius:6px;color:#3a7a58;font-size:11.5px;font-family:var(--font-ui);cursor:pointer;padding:4px 10px;">Copy</button>
@@ -329,7 +378,7 @@
   <div class="section-block">
     <div class="section-label">Invoice items</div>
     <div class="card">
-      <div class="row row-item" style="margin-bottom:6px;">
+      <div class="row row-item col-heads-row" style="margin-bottom:6px;">
         <div class="col-head">Amount ($)</div>
         <div class="col-head">Taxable?</div>
         <div class="col-head">Discountable?</div>
