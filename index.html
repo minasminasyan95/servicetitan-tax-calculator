@@ -169,7 +169,7 @@
   .row-tax      { grid-template-columns: 1fr 30px; }
 
 
-  input[type=number], input[type=text] {
+  input[type=number] {
     width: 100%; font-size: 15px; font-family: var(--font-ui);
     padding: 8px 12px;
     border: 1.5px solid var(--color-border-secondary);
@@ -179,8 +179,8 @@
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-  input[type=number]:focus, input[type=text]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-muted); }
-  input[type=number]::placeholder, input[type=text]::placeholder { color: var(--color-text-tertiary); }
+  input[type=number]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-muted); }
+  input[type=number]::placeholder { color: var(--color-text-tertiary); }
 
   /* ── Toggle buttons ── */
   .toggle-group {
@@ -579,7 +579,7 @@ function renderItems() {
   document.getElementById('items-container').innerHTML = items.map(item => `
     <div class="item-row">
       <div class="item-row-top">
-        <input type="text" inputmode="decimal" placeholder="0.00" value="${item.amount}"
+        <input type="number" step="0.01" placeholder="0.00" value="${item.amount}"
           oninput="items.find(i=>i.id==${item.id}).amount=this.value;calculate()" style="text-align:right;" />
         <div class="toggle-group">
           <div class="toggle-inner">
