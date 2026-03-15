@@ -160,6 +160,8 @@
   }
   .toggle-group-full { width: 100%; }
   .toggle-group-full button { flex: 1; text-align: center; }
+  /* toggle-inner: on desktop it's invisible passthrough */
+  .toggle-inner { display: contents; }
 
   /* ── Discount / tax rows ── */
   .row { display: grid; gap: 10px; align-items: center; margin-bottom: 10px; }
@@ -311,28 +313,28 @@
     .header-row h1 { font-size: 19px; }
     .header-meta { text-align: left; font-size: 11.5px; }
 
-    /* ── Invoice item rows on mobile: input full width top, toggles below ── */
+    /* ── Invoice item rows on mobile ── */
+    /* Hide the separate header row — labels live inside each item row instead */
+    .col-heads-desktop { display: none; }
+    /* Input + remove on top line, two labeled toggles side-by-side below */
     .item-row-top {
       grid-template-columns: 1fr 1fr 30px;
       grid-template-rows: auto auto;
       row-gap: 8px;
+      position: static;
     }
-    .item-row-top > input[type=number]               { grid-column: 1 / -1; grid-row: 1; }
-    .item-row-top > .rm-btn                          { grid-column: 3;      grid-row: 1; position: absolute; top: 0; right: 0; }
-    .item-row-top > .toggle-group:nth-of-type(1)     { grid-column: 1;      grid-row: 2; }
-    .item-row-top > .toggle-group:nth-of-type(2)     { grid-column: 2;      grid-row: 2; }
-    /* Make item-row-top position:relative so rm-btn can be absolute */
-    .item-row-top { position: relative; }
-    /* Header row stacks the same way */
-    .col-heads-desktop {
-      grid-template-columns: 1fr 1fr 30px;
-      grid-template-rows: auto auto;
-      row-gap: 4px;
-    }
-    .col-heads-desktop > .col-head:nth-child(1) { grid-column: 1 / -1; grid-row: 1; }
-    .col-heads-desktop > .col-head:nth-child(2) { grid-column: 1;      grid-row: 2; text-align: left; }
-    .col-heads-desktop > .col-head:nth-child(3) { grid-column: 2;      grid-row: 2; text-align: left; }
-    .col-heads-desktop > div:last-child         { display: none; }
+    .item-row-top > input[type=number]           { grid-column: 1 / -1; grid-row: 1; }
+    .item-row-top > .rm-btn                      { grid-column: 3;      grid-row: 1; }
+    .item-row-top > .toggle-group:nth-of-type(1) { grid-column: 1;      grid-row: 2; }
+    .item-row-top > .toggle-group:nth-of-type(2) { grid-column: 2;      grid-row: 2; }
+    /* Inline labels: shown on mobile only */
+    .item-row-top > .toggle-group::before { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 4px; }
+    .item-row-top > .toggle-group:nth-of-type(1)::before { content: 'Taxable?'; }
+    .item-row-top > .toggle-group:nth-of-type(2)::before { content: 'Discountable?'; }
+    /* Make toggle-group a flex column so the label sits above the buttons */
+    .item-row-top > .toggle-group { display: flex; flex-direction: column; border: none; background: none; border-radius: 0; overflow: visible; }
+    .item-row-top > .toggle-group > .toggle-inner { display: inline-flex; border: 1.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); overflow: hidden; background: var(--color-background-primary); width: 100%; }
+    .item-row-top > .toggle-group > .toggle-inner > button { flex: 1; text-align: center; }
 
     /* ── Results & comparison grids ── */
     .results-grid { grid-template-columns: 1fr; }
@@ -579,13 +581,17 @@ function renderItems() {
       <div class="item-row-top">
         <input type="number" step="0.01" placeholder="0.00" value="${item.amount}"
           oninput="items.find(i=>i.id==${item.id}).amount=this.value;calculate()" style="text-align:right;" />
-        <div class="toggle-group toggle-group-full">
-          <button class="${item.taxable === 'yes' ? 'active' : ''}" onclick="setItemTaxable(${item.id}, 'yes')">Yes</button>
-          <button class="${item.taxable === 'no' ? 'active' : ''}" onclick="setItemTaxable(${item.id}, 'no')">No</button>
+        <div class="toggle-group">
+          <div class="toggle-inner">
+            <button class="${item.taxable === 'yes' ? 'active' : ''}" onclick="setItemTaxable(${item.id}, 'yes')">Yes</button>
+            <button class="${item.taxable === 'no' ? 'active' : ''}" onclick="setItemTaxable(${item.id}, 'no')">No</button>
+          </div>
         </div>
-        <div class="toggle-group toggle-group-full">
-          <button class="${item.discountable === 'yes' ? 'active' : ''}" onclick="setItemDiscountable(${item.id}, 'yes')">Yes</button>
-          <button class="${item.discountable === 'no' ? 'active' : ''}" onclick="setItemDiscountable(${item.id}, 'no')">No</button>
+        <div class="toggle-group">
+          <div class="toggle-inner">
+            <button class="${item.discountable === 'yes' ? 'active' : ''}" onclick="setItemDiscountable(${item.id}, 'yes')">Yes</button>
+            <button class="${item.discountable === 'no' ? 'active' : ''}" onclick="setItemDiscountable(${item.id}, 'no')">No</button>
+          </div>
         </div>
         <button class="rm-btn" onclick="removeItem(${item.id})">&#215;</button>
       </div>
